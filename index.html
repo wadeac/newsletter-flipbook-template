@@ -14,40 +14,6 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* ---- TAP-TO-READ OVERLAY (for embedded/mobile) ---- */
-    .tap-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 50000; cursor: pointer;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(2px);
-      transition: opacity 0.4s ease;
-    }
-    .tap-overlay.hidden { opacity: 0; pointer-events: none; }
-    .tap-overlay-content {
-      text-align: center; color: #fff;
-      animation: tapPulse 2s ease-in-out infinite;
-    }
-    .tap-overlay-icon {
-      width: 72px; height: 72px; margin: 0 auto 16px;
-      background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    }
-    .tap-overlay-icon svg { width: 36px; height: 36px; fill: #fff; }
-    .tap-overlay-title {
-      font-size: 20px; font-weight: 600; margin-bottom: 6px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-    .tap-overlay-sub {
-      font-size: 13px; opacity: 0.8;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-    }
-    @keyframes tapPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.04); }
-    }
-
     /* ---- LAYOUT ---- */
     .flipbook-container {
       display: flex; flex-direction: column;
@@ -57,7 +23,7 @@
     .book-wrapper {
       position: relative; display: flex;
       align-items: center; justify-content: center;
-      flex: 1; width: 100%; padding: 10px;
+      flex: 1; width: 100%; padding: 4px;
     }
     .page { background: #fff; overflow: hidden; position: relative; }
     .page img {
@@ -82,41 +48,30 @@
       transform: translateY(-50%) scale(1.1);
     }
     .nav-btn svg { width: 20px; height: 20px; fill: #fff; }
-    #prev-btn { left: 8px; }
-    #next-btn { right: 8px; }
+    #prev-btn { left: 4px; }
+    #next-btn { right: 4px; }
 
     /* ---- BOTTOM CONTROLS ---- */
     .controls {
       display: flex; align-items: center; justify-content: center;
-      gap: 14px; padding: 8px 16px;
+      gap: 10px; padding: 5px 12px;
       background: rgba(0,0,0,0.35); backdrop-filter: blur(8px);
-      border-radius: 24px; margin-bottom: 10px;
+      border-radius: 24px; margin-bottom: 6px;
     }
     .page-info {
-      color: rgba(255,255,255,0.9); font-size: 13px;
-      font-weight: 500; min-width: 100px; text-align: center;
+      color: rgba(255,255,255,0.9); font-size: 12px;
+      font-weight: 500; min-width: 80px; text-align: center;
     }
     .ctrl-btn {
       background: rgba(255,255,255,0.12);
       border: 1px solid rgba(255,255,255,0.2); color: #fff;
-      width: 36px; height: 36px; border-radius: 50%;
+      width: 32px; height: 32px; border-radius: 50%;
       cursor: pointer; display: flex; align-items: center;
       justify-content: center; transition: all 0.3s ease;
     }
     .ctrl-btn:hover { background: rgba(255,255,255,0.25); }
     .ctrl-btn.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-    .ctrl-btn svg { width: 16px; height: 16px; fill: #fff; }
-
-    /* Fullscreen button glow on mobile when embedded */
-    .ctrl-btn.glow-hint {
-      animation: glowPulse 1.5s ease-in-out 3;
-      border-color: rgba(52,152,219,0.8);
-      background: rgba(52,152,219,0.3);
-    }
-    @keyframes glowPulse {
-      0%, 100% { box-shadow: 0 0 4px rgba(52,152,219,0.3); }
-      50% { box-shadow: 0 0 16px rgba(52,152,219,0.7); }
-    }
+    .ctrl-btn svg { width: 14px; height: 14px; fill: #fff; }
 
     /* ---- LOADING ---- */
     .loading-overlay {
@@ -127,12 +82,12 @@
     }
     .loading-overlay.hidden { opacity: 0; pointer-events: none; }
     .spinner {
-      width: 48px; height: 48px;
-      border: 4px solid rgba(255,255,255,0.2);
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,255,255,0.2);
       border-top-color: #3498db; border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-    .loading-text { color: rgba(255,255,255,0.8); margin-top: 16px; font-size: 14px; }
+    .loading-text { color: rgba(255,255,255,0.8); margin-top: 12px; font-size: 13px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ---- INTERACTIVE OVERLAYS ---- */
@@ -141,8 +96,6 @@
       width: 100%; height: 100%;
       pointer-events: none; z-index: 10;
     }
-
-    /* Link hotspots */
     .hotspot-link {
       position: absolute; cursor: pointer; pointer-events: auto;
       border: 2px solid transparent; border-radius: 4px;
@@ -175,7 +128,6 @@
     .hotspot-link:hover .link-icon { opacity: 1; }
     .hotspot-link .link-icon svg { width: 10px; height: 10px; fill: #fff; }
 
-    /* Video hotspots */
     .hotspot-video {
       position: absolute; cursor: pointer; pointer-events: auto;
       border-radius: 6px; transition: all 0.25s ease; z-index: 11;
@@ -183,7 +135,7 @@
     }
     .hotspot-video:hover { background: rgba(0,0,0,0.15); }
     .hotspot-video .play-btn {
-      width: 52px; height: 52px; background: rgba(231,76,60,0.9);
+      width: 44px; height: 44px; background: rgba(231,76,60,0.9);
       border-radius: 50%; display: flex; align-items: center;
       justify-content: center; transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -191,9 +143,8 @@
     .hotspot-video:hover .play-btn {
       transform: scale(1.12);
       background: rgba(231,76,60,1);
-      box-shadow: 0 6px 20px rgba(231,76,60,0.4);
     }
-    .hotspot-video .play-btn svg { width: 22px; height: 22px; fill: #fff; margin-left: 3px; }
+    .hotspot-video .play-btn svg { width: 18px; height: 18px; fill: #fff; margin-left: 2px; }
     .hotspot-video .hotspot-tooltip {
       position: absolute; bottom: calc(100% + 8px); left: 50%;
       transform: translateX(-50%); background: rgba(0,0,0,0.85);
@@ -201,14 +152,8 @@
       font-size: 12px; white-space: nowrap;
       opacity: 0; transition: opacity 0.2s; pointer-events: none;
     }
-    .hotspot-video .hotspot-tooltip::after {
-      content: ''; position: absolute; top: 100%; left: 50%;
-      transform: translateX(-50%);
-      border: 5px solid transparent; border-top-color: rgba(0,0,0,0.85);
-    }
     .hotspot-video:hover .hotspot-tooltip { opacity: 1; }
 
-    /* Zoom hotspots */
     .hotspot-zoom {
       position: absolute; cursor: zoom-in; pointer-events: auto;
       border: 2px solid transparent; border-radius: 4px;
@@ -227,18 +172,15 @@
     .hotspot-zoom:hover .zoom-icon { opacity: 1; }
     .hotspot-zoom .zoom-icon svg { width: 12px; height: 12px; fill: #fff; }
 
-    /* Tooltip markers */
     .hotspot-tip {
-      position: absolute; pointer-events: auto; z-index: 12;
-      cursor: pointer;
+      position: absolute; pointer-events: auto; z-index: 12; cursor: pointer;
     }
     .hotspot-tip .tip-icon {
-      width: 24px; height: 24px; border-radius: 50%;
+      width: 22px; height: 22px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 14px; font-weight: 700;
+      color: #fff; font-size: 13px; font-weight: 700;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       animation: tipPulse 2s ease-in-out infinite;
-      transition: transform 0.2s;
     }
     .hotspot-tip:hover .tip-icon { transform: scale(1.15); animation: none; }
     @keyframes tipPulse {
@@ -249,7 +191,7 @@
       position: absolute; bottom: calc(100% + 10px); left: 50%;
       transform: translateX(-50%); background: rgba(0,0,0,0.9);
       color: #fff; padding: 10px 14px; border-radius: 8px;
-      font-size: 12px; line-height: 1.5; min-width: 160px; max-width: 260px;
+      font-size: 12px; line-height: 1.5; min-width: 140px; max-width: 220px;
       opacity: 0; transition: opacity 0.2s; pointer-events: none;
       text-align: center; white-space: normal;
     }
@@ -261,6 +203,60 @@
     .hotspot-tip:hover .tip-bubble,
     .hotspot-tip.active .tip-bubble { opacity: 1; pointer-events: auto; }
 
+    /* ---- PAGE ZOOM MODAL (tap any page to read full-size) ---- */
+    .page-zoom-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95); z-index: 10000;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      touch-action: pinch-zoom;
+    }
+    .page-zoom-modal.open { display: flex; }
+    .page-zoom-modal .zoom-container {
+      width: 100%; height: 100%; overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .page-zoom-modal .zoom-container img {
+      max-width: none; /* allow it to be larger than viewport */
+      height: auto;
+      transition: width 0.3s ease;
+    }
+    .page-zoom-modal .zoom-controls {
+      position: fixed; bottom: 16px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 10px; z-index: 10001;
+      background: rgba(0,0,0,0.7); padding: 8px 16px;
+      border-radius: 24px; backdrop-filter: blur(8px);
+    }
+    .page-zoom-modal .zoom-controls button {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; transition: all 0.2s;
+    }
+    .page-zoom-modal .zoom-controls button:hover { background: rgba(255,255,255,0.3); }
+    .page-zoom-modal .zoom-close {
+      position: fixed; top: 12px; right: 12px;
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+      color: #fff; width: 40px; height: 40px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 22px; z-index: 10001;
+      transition: all 0.2s;
+    }
+    .page-zoom-modal .zoom-close:hover { background: rgba(255,255,255,0.4); }
+    .page-zoom-modal .zoom-page-info {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.8); font-size: 13px; z-index: 10001;
+      background: rgba(0,0,0,0.5); padding: 4px 14px; border-radius: 12px;
+    }
+    .page-zoom-modal .zoom-hint {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      color: rgba(255,255,255,0.7); font-size: 14px; z-index: 10001;
+      background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 10px;
+      pointer-events: none; transition: opacity 0.5s;
+    }
+
     /* ---- VIDEO MODAL ---- */
     .video-modal {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -270,15 +266,13 @@
     }
     .video-modal.open { display: flex; }
     .video-modal-inner {
-      position: relative; width: 90%; max-width: 900px;
-      aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
+      position: relative; width: 94%; max-width: 900px;
+      aspect-ratio: 16/9; border-radius: 8px; overflow: hidden;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
-    .video-modal-inner iframe {
-      width: 100%; height: 100%; border: none;
-    }
+    .video-modal-inner iframe { width: 100%; height: 100%; border: none; }
     .video-modal-close {
-      position: absolute; top: -40px; right: 0;
+      position: absolute; top: -36px; right: 0;
       background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
       color: #fff; width: 32px; height: 32px; border-radius: 50%;
       cursor: pointer; display: flex; align-items: center;
@@ -286,18 +280,18 @@
     }
     .video-modal-close:hover { background: rgba(255,255,255,0.3); }
 
-    /* ---- ZOOM MODAL ---- */
+    /* ---- ZOOM MODAL (for hotspot zoom areas) ---- */
     .zoom-modal {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.92); z-index: 10000;
       display: none; flex-direction: column;
       align-items: center; justify-content: center;
-      backdrop-filter: blur(4px); cursor: zoom-out;
+      cursor: zoom-out;
     }
     .zoom-modal.open { display: flex; }
     .zoom-modal img {
       max-width: 92%; max-height: 82vh; object-fit: contain;
-      border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      border-radius: 8px;
     }
     .zoom-modal .zoom-caption {
       color: rgba(255,255,255,0.85); font-size: 14px;
@@ -314,46 +308,46 @@
 
     /* ---- TABLE OF CONTENTS PANEL ---- */
     .toc-panel {
-      position: fixed; top: 0; right: -320px; width: 300px;
+      position: fixed; top: 0; right: -320px; width: 280px;
       height: 100%; background: rgba(20,25,35,0.97);
       backdrop-filter: blur(12px); z-index: 9000;
       transition: right 0.35s ease; overflow-y: auto;
       box-shadow: -4px 0 20px rgba(0,0,0,0.3);
-      padding: 20px 0;
+      padding: 16px 0;
     }
     .toc-panel.open { right: 0; }
     .toc-panel-header {
-      padding: 0 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 0 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.1);
       display: flex; align-items: center; justify-content: space-between;
     }
     .toc-panel-header h3 {
-      color: #fff; font-size: 15px; font-weight: 600; letter-spacing: 0.5px;
+      color: #fff; font-size: 14px; font-weight: 600;
     }
     .toc-close {
       background: none; border: none; color: rgba(255,255,255,0.6);
-      font-size: 22px; cursor: pointer; transition: color 0.2s;
+      font-size: 22px; cursor: pointer;
     }
     .toc-close:hover { color: #fff; }
-    .toc-list { padding: 12px 16px; }
+    .toc-list { padding: 8px 12px; }
     .toc-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 8px; border-radius: 8px; cursor: pointer;
-      transition: background 0.2s; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 6px; border-radius: 8px; cursor: pointer;
+      transition: background 0.2s; margin-bottom: 2px;
     }
     .toc-item:hover { background: rgba(255,255,255,0.08); }
     .toc-item.active { background: rgba(52,152,219,0.2); }
     .toc-thumb {
-      width: 48px; height: 62px; border-radius: 4px;
+      width: 40px; height: 52px; border-radius: 4px;
       overflow: hidden; flex-shrink: 0;
       border: 1px solid rgba(255,255,255,0.15);
     }
     .toc-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .toc-item-info { flex: 1; min-width: 0; }
     .toc-item-title {
-      color: #fff; font-size: 13px; font-weight: 500;
+      color: #fff; font-size: 12px; font-weight: 500;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .toc-item-page { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 2px; }
+    .toc-item-page { color: rgba(255,255,255,0.4); font-size: 10px; margin-top: 2px; }
     .toc-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.3); z-index: 8999;
@@ -361,54 +355,60 @@
     }
     .toc-overlay.open { display: block; }
 
-    /* ---- DESIGN MODE (coordinate helper) ---- */
+    /* ---- DESIGN MODE ---- */
     .design-mode-banner {
       position: fixed; top: 0; left: 0; right: 0;
       background: rgba(231,76,60,0.95); color: #fff;
-      text-align: center; padding: 8px; font-size: 13px;
+      text-align: center; padding: 6px; font-size: 12px;
       z-index: 20000; font-weight: 500;
     }
     .design-mode-banner span { opacity: 0.7; font-weight: 400; }
     .coord-display {
-      position: fixed; bottom: 20px; left: 50%;
+      position: fixed; bottom: 16px; left: 50%;
       transform: translateX(-50%); background: rgba(0,0,0,0.9);
-      color: #0f0; padding: 12px 20px; border-radius: 8px;
-      font-family: monospace; font-size: 14px; z-index: 20000;
-      display: none; min-width: 300px; text-align: center;
+      color: #0f0; padding: 10px 16px; border-radius: 8px;
+      font-family: monospace; font-size: 13px; z-index: 20000;
+      display: none; min-width: 260px; text-align: center;
     }
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
-      .nav-btn { width: 36px; height: 36px; }
-      .nav-btn svg { width: 16px; height: 16px; }
-      #prev-btn { left: 4px; }
-      #next-btn { right: 4px; }
-      .controls { gap: 8px; padding: 6px 10px; }
-      .page-info { font-size: 11px; min-width: 80px; }
-      .ctrl-btn { width: 32px; height: 32px; }
-      .toc-panel { width: 260px; right: -280px; }
-      .hotspot-video .play-btn { width: 40px; height: 40px; }
-      .hotspot-video .play-btn svg { width: 16px; height: 16px; }
+      .nav-btn { width: 32px; height: 32px; }
+      .nav-btn svg { width: 14px; height: 14px; }
+      #prev-btn { left: 2px; }
+      #next-btn { right: 2px; }
+      .controls { gap: 6px; padding: 4px 8px; }
+      .page-info { font-size: 10px; min-width: 60px; }
+      .ctrl-btn { width: 28px; height: 28px; }
+      .ctrl-btn svg { width: 12px; height: 12px; }
+      .toc-panel { width: 240px; right: -260px; }
+      .hotspot-video .play-btn { width: 36px; height: 36px; }
+      .hotspot-video .play-btn svg { width: 14px; height: 14px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Tap-to-Read Overlay (shown when embedded in small containers) -->
-  <div class="tap-overlay" id="tapOverlay">
-    <div class="tap-overlay-content">
-      <div class="tap-overlay-icon">
-        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
-      </div>
-      <div class="tap-overlay-title">Tap to Read Full Screen</div>
-      <div class="tap-overlay-sub">Opens the newsletter in a readable size</div>
-    </div>
-  </div>
-
   <!-- Loading -->
   <div class="loading-overlay" id="loading">
     <div class="spinner"></div>
     <div class="loading-text">Loading newsletter...</div>
+  </div>
+
+  <!-- Page Zoom Modal (tap any page to read full-size) -->
+  <div class="page-zoom-modal" id="pageZoomModal">
+    <button class="zoom-close" id="pageZoomClose">&times;</button>
+    <div class="zoom-page-info" id="zoomPageInfo">Page 1 of 10</div>
+    <div class="zoom-container" id="zoomContainer">
+      <img id="pageZoomImage" src="" alt="Page view">
+    </div>
+    <div class="zoom-controls">
+      <button id="zoomOut" title="Zoom out">&minus;</button>
+      <button id="zoomFit" title="Fit to screen" style="font-size:13px;">Fit</button>
+      <button id="zoomIn" title="Zoom in">&plus;</button>
+      <button id="zoomPrev" title="Previous page">&#8249;</button>
+      <button id="zoomNext" title="Next page">&#8250;</button>
+    </div>
   </div>
 
   <!-- Video Modal -->
@@ -419,7 +419,7 @@
     </div>
   </div>
 
-  <!-- Zoom Modal -->
+  <!-- Zoom Modal (for hotspot zoom areas) -->
   <div class="zoom-modal" id="zoomModal">
     <button class="zoom-modal-close" id="zoomClose">&times;</button>
     <img id="zoomImage" src="" alt="Zoomed view">
@@ -477,12 +477,7 @@
   </div>
 
   <script>
-    // ============================================================
-    //  ENGINE — reads config.js and powers everything
-    // ============================================================
     const C = FLIPBOOK_CONFIG;
-
-    // Apply settings
     document.title = C.title || 'Flipbook';
     document.body.style.background = C.backgroundColor || '#2c3e50';
     document.getElementById('loading').style.background = C.backgroundColor || '#2c3e50';
@@ -491,89 +486,22 @@
     let pageFlip = null;
     let currentPageIndex = 0;
     let designMode = false;
+    let zoomLevel = 100; // percentage for page zoom modal
 
-    // ---- Detect if we're embedded in a small container (iframe/widget) ----
-    function isEmbeddedSmall() {
-      // Check if we're in an iframe
-      const inIframe = window.self !== window.top;
-      // Check if viewport is small (typical embedded widget)
-      const isSmall = window.innerHeight < 500 || window.innerWidth < 500;
-      return inIframe && isSmall;
-    }
-
-    // ---- Tap-to-Read Overlay ----
-    function setupTapOverlay() {
-      const overlay = document.getElementById('tapOverlay');
-
-      // Only show if embedded in a small container
-      if (!isEmbeddedSmall()) {
-        overlay.style.display = 'none';
-        return;
-      }
-
-      overlay.addEventListener('click', () => {
-        // Try fullscreen first
-        const fsEl = document.documentElement;
-        const fsRequest = fsEl.requestFullscreen || fsEl.webkitRequestFullscreen || fsEl.msRequestFullscreen;
-
-        if (fsRequest) {
-          fsRequest.call(fsEl).then(() => {
-            overlay.classList.add('hidden');
-            setTimeout(() => overlay.style.display = 'none', 500);
-          }).catch(() => {
-            // Fullscreen blocked — try opening in a new tab instead
-            window.open(window.location.href, '_blank');
-            overlay.classList.add('hidden');
-            setTimeout(() => overlay.style.display = 'none', 500);
-          });
-        } else {
-          // No fullscreen API — open in new tab
-          window.open(window.location.href, '_blank');
-          overlay.classList.add('hidden');
-          setTimeout(() => overlay.style.display = 'none', 500);
-        }
-      });
-    }
-
-    // Also add a "open in new tab" fallback for mobile where fullscreen may not work in iframes
-    function addNewTabFallback() {
-      if (window.self !== window.top) {
-        // We're in an iframe — add a subtle "open in new tab" button
-        const btn = document.createElement('a');
-        btn.href = window.location.href;
-        btn.target = '_blank';
-        btn.rel = 'noopener';
-        btn.title = 'Open in new tab for full-size reading';
-        btn.style.cssText = `
-          position: fixed; top: 8px; right: 8px; z-index: 200;
-          background: rgba(52,152,219,0.9); color: #fff;
-          width: 36px; height: 36px; border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          text-decoration: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-          transition: all 0.3s ease; font-size: 0;
-        `;
-        btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>';
-        btn.addEventListener('mouseenter', () => { btn.style.transform = 'scale(1.1)'; });
-        btn.addEventListener('mouseleave', () => { btn.style.transform = 'scale(1)'; });
-        document.body.appendChild(btn);
-      }
-    }
-
-    // ---- Sizing ----
+    // ---- Always use single-page (portrait) mode for maximum readability ----
     function calcBookSize() {
-      const vw = window.innerWidth, vh = window.innerHeight - 70;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight - 50; // leave room for controls
       let bw, bh;
-      if (vw >= 700) {
-        const maxW = vw * 0.85, maxH = vh * 0.92;
-        bh = maxH; bw = bh * ASPECT * 2;
-        if (bw > maxW) { bw = maxW; bh = bw / (ASPECT * 2); }
-        return { pageWidth: Math.floor(bw/2), pageHeight: Math.floor(bh), mode: 'double' };
-      } else {
-        const maxW = vw * 0.92, maxH = vh * 0.9;
-        bh = maxH; bw = bh * ASPECT;
-        if (bw > maxW) { bw = maxW; bh = bw / ASPECT; }
-        return { pageWidth: Math.floor(bw), pageHeight: Math.floor(bh), mode: 'single' };
-      }
+
+      // Always single page for readability
+      const maxW = vw * 0.94;
+      const maxH = vh * 0.95;
+      bh = maxH;
+      bw = bh * ASPECT;
+      if (bw > maxW) { bw = maxW; bh = bw / ASPECT; }
+
+      return { pageWidth: Math.floor(bw), pageHeight: Math.floor(bh), mode: 'single' };
     }
 
     // ---- Preload ----
@@ -590,7 +518,6 @@
       const overlay = document.createElement('div');
       overlay.className = 'overlay-layer';
 
-      // Links
       (C.links || []).filter(l => l.page === pageNum).forEach(l => {
         const el = document.createElement('a');
         el.className = 'hotspot-link';
@@ -609,7 +536,6 @@
         overlay.appendChild(el);
       });
 
-      // Videos
       (C.videos || []).filter(v => v.page === pageNum).forEach(v => {
         const el = document.createElement('div');
         el.className = 'hotspot-video';
@@ -627,7 +553,6 @@
         overlay.appendChild(el);
       });
 
-      // Zoom areas
       (C.zoomAreas || []).filter(z => z.page === pageNum).forEach(z => {
         const el = document.createElement('div');
         el.className = 'hotspot-zoom';
@@ -638,12 +563,11 @@
         el.appendChild(icon);
         el.addEventListener('click', (e) => {
           e.stopPropagation();
-          openZoom(z.imageUrl || `pages/page_${pageNum}.jpg`, z.caption || '', !z.imageUrl);
+          openHotspotZoom(z.imageUrl || `pages/page_${pageNum}.jpg`, z.caption || '');
         });
         overlay.appendChild(el);
       });
 
-      // Tooltips
       (C.tooltips || []).filter(t => t.page === pageNum).forEach(t => {
         const el = document.createElement('div');
         el.className = 'hotspot-tip';
@@ -666,7 +590,7 @@
       pageDiv.appendChild(overlay);
     }
 
-    // ---- Init flipbook ----
+    // ---- Init flipbook (always single page / portrait) ----
     function initFlipbook() {
       const container = document.getElementById('flipbook');
       container.innerHTML = '';
@@ -674,14 +598,14 @@
 
       pageFlip = new St.PageFlip(container, {
         width: size.pageWidth, height: size.pageHeight,
-        size: 'fixed', minWidth: 200, maxWidth: 1200,
-        minHeight: 260, maxHeight: 1600,
+        size: 'fixed', minWidth: 100, maxWidth: 1200,
+        minHeight: 130, maxHeight: 1600,
         showCover: true, maxShadowOpacity: 0.5,
         mobileScrollSupport: true, clickEventForward: true,
         useMouseEvents: true, swipeDistance: 30,
         showPageCorners: true, disableFlipByClick: false,
         flippingTime: C.flipTime || 800,
-        usePortrait: size.mode === 'single',
+        usePortrait: true, // ALWAYS single page
         autoSize: false, drawShadow: true, startPage: 0, startZIndex: 0,
       });
 
@@ -702,12 +626,96 @@
       pageFlip.loadFromHTML(pages);
       pageFlip.on('flip', (e) => { currentPageIndex = e.data; updatePageInfo(e.data); updateTocActive(); });
       updatePageInfo(currentPageIndex);
+
+      // Double-tap / double-click to zoom into current page
+      let lastTap = 0;
+      container.addEventListener('click', (e) => {
+        // Don't trigger on hotspot clicks
+        if (e.target.closest('.hotspot-link, .hotspot-video, .hotspot-zoom, .hotspot-tip')) return;
+        const now = Date.now();
+        if (now - lastTap < 400) {
+          openPageZoom(currentPageIndex + 1);
+        }
+        lastTap = now;
+      });
     }
 
     function updatePageInfo(idx) {
       currentPageIndex = idx;
       document.getElementById('page-info').textContent = `Page ${idx + 1} of ${C.totalPages}`;
     }
+
+    // ---- PAGE ZOOM MODAL (full-screen page reader with zoom) ----
+    let currentZoomPage = 1;
+
+    function openPageZoom(pageNum) {
+      currentZoomPage = pageNum;
+      const modal = document.getElementById('pageZoomModal');
+      const img = document.getElementById('pageZoomImage');
+      img.src = `pages/page_${pageNum}.jpg`;
+      document.getElementById('zoomPageInfo').textContent = `Page ${pageNum} of ${C.totalPages}`;
+      modal.classList.add('open');
+      modal.style.display = 'flex';
+      zoomLevel = 100;
+      applyZoom();
+
+      // Show hint briefly
+      showZoomHint();
+    }
+
+    function closePageZoom() {
+      const modal = document.getElementById('pageZoomModal');
+      modal.classList.remove('open');
+      modal.style.display = 'none';
+      document.getElementById('pageZoomImage').src = '';
+    }
+
+    function applyZoom() {
+      const img = document.getElementById('pageZoomImage');
+      const container = document.getElementById('zoomContainer');
+      if (zoomLevel <= 100) {
+        img.style.width = zoomLevel + '%';
+        img.style.maxHeight = '100%';
+        container.style.overflow = 'hidden';
+        container.style.alignItems = 'center';
+        container.style.justifyContent = 'center';
+      } else {
+        img.style.width = zoomLevel + '%';
+        img.style.maxHeight = 'none';
+        container.style.overflow = 'auto';
+        container.style.alignItems = 'flex-start';
+        container.style.justifyContent = 'flex-start';
+      }
+    }
+
+    function showZoomHint() {
+      const hint = document.createElement('div');
+      hint.className = 'zoom-hint';
+      hint.textContent = 'Pinch or use +/- to zoom';
+      document.getElementById('pageZoomModal').appendChild(hint);
+      setTimeout(() => { hint.style.opacity = '0'; }, 2000);
+      setTimeout(() => { hint.remove(); }, 2500);
+    }
+
+    document.getElementById('pageZoomClose').addEventListener('click', closePageZoom);
+    document.getElementById('zoomIn').addEventListener('click', () => {
+      zoomLevel = Math.min(300, zoomLevel + 30);
+      applyZoom();
+    });
+    document.getElementById('zoomOut').addEventListener('click', () => {
+      zoomLevel = Math.max(50, zoomLevel - 30);
+      applyZoom();
+    });
+    document.getElementById('zoomFit').addEventListener('click', () => {
+      zoomLevel = 100;
+      applyZoom();
+    });
+    document.getElementById('zoomPrev').addEventListener('click', () => {
+      if (currentZoomPage > 1) openPageZoom(currentZoomPage - 1);
+    });
+    document.getElementById('zoomNext').addEventListener('click', () => {
+      if (currentZoomPage < C.totalPages) openPageZoom(currentZoomPage + 1);
+    });
 
     // ---- Video modal ----
     function parseVideoUrl(url) {
@@ -736,20 +744,20 @@
       if (e.target === document.getElementById('videoModal')) closeVideo();
     });
 
-    // ---- Zoom modal ----
-    function openZoom(src, caption, isPageImage) {
+    // ---- Hotspot Zoom modal ----
+    function openHotspotZoom(src, caption) {
       document.getElementById('zoomImage').src = src;
       document.getElementById('zoomCaption').textContent = caption;
       document.getElementById('zoomCaption').style.display = caption ? 'block' : 'none';
       document.getElementById('zoomModal').classList.add('open');
     }
-    function closeZoom() {
+    function closeHotspotZoom() {
       document.getElementById('zoomModal').classList.remove('open');
       document.getElementById('zoomImage').src = '';
     }
-    document.getElementById('zoomClose').addEventListener('click', closeZoom);
+    document.getElementById('zoomClose').addEventListener('click', closeHotspotZoom);
     document.getElementById('zoomModal').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) closeZoom();
+      if (e.target === e.currentTarget) closeHotspotZoom();
     });
 
     // ---- Table of Contents ----
@@ -809,40 +817,28 @@
     document.getElementById('last-btn').addEventListener('click', () => pageFlip && pageFlip.flip(C.totalPages - 1));
 
     // Fullscreen
-    function goFullscreen() {
-      const fsEl = document.documentElement;
-      const fsRequest = fsEl.requestFullscreen || fsEl.webkitRequestFullscreen || fsEl.msRequestFullscreen;
-      if (fsRequest) {
-        fsRequest.call(fsEl).catch(() => {
-          // If fullscreen fails (e.g., in iframe without allow), open in new tab
-          window.open(window.location.href, '_blank');
-        });
-      } else {
-        window.open(window.location.href, '_blank');
-      }
-    }
-
     document.getElementById('fullscreen-btn').addEventListener('click', () => {
+      const fsEl = document.documentElement;
       if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        goFullscreen();
+        const req = fsEl.requestFullscreen || fsEl.webkitRequestFullscreen;
+        if (req) req.call(fsEl).catch(() => { window.open(window.location.href, '_blank'); });
+        else window.open(window.location.href, '_blank');
       } else {
         (document.exitFullscreen || document.webkitExitFullscreen).call(document).catch(() => {});
       }
     });
-
-    document.addEventListener('fullscreenchange', () => {
-      document.body.classList.toggle('fullscreen-active', !!document.fullscreenElement);
+    const onFsChange = () => {
+      const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      document.body.classList.toggle('fullscreen-active', isFull);
       setTimeout(() => { initFlipbook(); setTimeout(() => { if (pageFlip && currentPageIndex > 0) pageFlip.flip(currentPageIndex); }, 100); }, 300);
-    });
-    document.addEventListener('webkitfullscreenchange', () => {
-      document.body.classList.toggle('fullscreen-active', !!document.webkitFullscreenElement);
-      setTimeout(() => { initFlipbook(); setTimeout(() => { if (pageFlip && currentPageIndex > 0) pageFlip.flip(currentPageIndex); }, 100); }, 300);
-    });
+    };
+    document.addEventListener('fullscreenchange', onFsChange);
+    document.addEventListener('webkitfullscreenchange', onFsChange);
 
     // Keyboard
     document.addEventListener('keydown', (e) => {
       if (!pageFlip) return;
-      if (e.key === 'Escape') { closeVideo(); closeZoom(); closeToc(); return; }
+      if (e.key === 'Escape') { closePageZoom(); closeVideo(); closeHotspotZoom(); closeToc(); return; }
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') pageFlip.flipNext();
       else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') pageFlip.flipPrev();
       else if (e.key === 'Home') pageFlip.flip(0);
@@ -868,7 +864,7 @@
           const banner = document.createElement('div');
           banner.className = 'design-mode-banner';
           banner.id = 'designBanner';
-          banner.innerHTML = 'DESIGN MODE — Click on a page to get coordinates <span>(Press Ctrl+Shift+D to exit)</span>';
+          banner.innerHTML = 'DESIGN MODE — Click on a page to get coordinates <span>(Ctrl+Shift+D to exit)</span>';
           document.body.appendChild(banner);
           document.getElementById('coordDisplay').style.display = 'block';
           document.querySelectorAll('.page').forEach(p => {
@@ -876,8 +872,8 @@
             p.style.cursor = 'crosshair';
           });
         } else {
-          const banner = document.getElementById('designBanner');
-          if (banner) banner.remove();
+          const b = document.getElementById('designBanner');
+          if (b) b.remove();
           document.getElementById('coordDisplay').style.display = 'none';
           document.querySelectorAll('.page').forEach(p => {
             p.removeEventListener('click', designClick);
@@ -886,7 +882,6 @@
         }
       }
     });
-
     function designClick(e) {
       const page = e.currentTarget;
       const rect = page.getBoundingClientRect();
@@ -894,7 +889,7 @@
       const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
       const pageNum = page.dataset.pageNum;
       const display = document.getElementById('coordDisplay');
-      display.innerHTML = `Page: <strong>${pageNum}</strong> &nbsp;|&nbsp; x: <strong>${x}%</strong> &nbsp;|&nbsp; y: <strong>${y}%</strong><br><span style="opacity:0.6;font-size:12px">Use these values in config.js</span>`;
+      display.innerHTML = `Page: <strong>${pageNum}</strong> | x: <strong>${x}%</strong> | y: <strong>${y}%</strong>`;
       navigator.clipboard.writeText(`page: ${pageNum}, x: ${x}, y: ${y}`).catch(() => {});
     }
 
@@ -902,18 +897,9 @@
     preloadImages().then(() => {
       initFlipbook();
       buildToc();
-      setupTapOverlay();
-      addNewTabFallback();
       const loading = document.getElementById('loading');
       loading.classList.add('hidden');
       setTimeout(() => loading.remove(), 600);
-
-      // Hint the fullscreen button on mobile
-      if (window.innerWidth < 768) {
-        setTimeout(() => {
-          document.getElementById('fullscreen-btn').classList.add('glow-hint');
-        }, 1500);
-      }
     });
   </script>
 </body>
