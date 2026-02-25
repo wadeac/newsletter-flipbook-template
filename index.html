@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Flipbook</title>
   <script src="page-flip.browser.js"></script>
   <script src="config.js"></script>
@@ -12,6 +12,40 @@
     html, body {
       width: 100%; height: 100%; overflow: hidden;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* ---- TAP-TO-READ OVERLAY (for embedded/mobile) ---- */
+    .tap-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 50000; cursor: pointer;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(2px);
+      transition: opacity 0.4s ease;
+    }
+    .tap-overlay.hidden { opacity: 0; pointer-events: none; }
+    .tap-overlay-content {
+      text-align: center; color: #fff;
+      animation: tapPulse 2s ease-in-out infinite;
+    }
+    .tap-overlay-icon {
+      width: 72px; height: 72px; margin: 0 auto 16px;
+      background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+    .tap-overlay-icon svg { width: 36px; height: 36px; fill: #fff; }
+    .tap-overlay-title {
+      font-size: 20px; font-weight: 600; margin-bottom: 6px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .tap-overlay-sub {
+      font-size: 13px; opacity: 0.8;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    @keyframes tapPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
     }
 
     /* ---- LAYOUT ---- */
@@ -73,6 +107,17 @@
     .ctrl-btn.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
     .ctrl-btn svg { width: 16px; height: 16px; fill: #fff; }
 
+    /* Fullscreen button glow on mobile when embedded */
+    .ctrl-btn.glow-hint {
+      animation: glowPulse 1.5s ease-in-out 3;
+      border-color: rgba(52,152,219,0.8);
+      background: rgba(52,152,219,0.3);
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 4px rgba(52,152,219,0.3); }
+      50% { box-shadow: 0 0 16px rgba(52,152,219,0.7); }
+    }
+
     /* ---- LOADING ---- */
     .loading-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -121,8 +166,6 @@
       border: 5px solid transparent; border-top-color: rgba(0,0,0,0.85);
     }
     .hotspot-link:hover .hotspot-tooltip { opacity: 1; }
-
-    /* Link indicator icon */
     .hotspot-link .link-icon {
       position: absolute; top: 4px; right: 4px;
       width: 18px; height: 18px; background: rgba(52,152,219,0.8);
@@ -351,6 +394,17 @@
 </head>
 <body>
 
+  <!-- Tap-to-Read Overlay (shown when embedded in small containers) -->
+  <div class="tap-overlay" id="tapOverlay">
+    <div class="tap-overlay-content">
+      <div class="tap-overlay-icon">
+        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+      </div>
+      <div class="tap-overlay-title">Tap to Read Full Screen</div>
+      <div class="tap-overlay-sub">Opens the newsletter in a readable size</div>
+    </div>
+  </div>
+
   <!-- Loading -->
   <div class="loading-overlay" id="loading">
     <div class="spinner"></div>
@@ -413,7 +467,6 @@
       <button class="ctrl-btn" id="last-btn" title="Last page">
         <svg viewBox="0 0 24 24"><path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"/></svg>
       </button>
-      <!-- TOC button -->
       <button class="ctrl-btn" id="toc-btn" title="Table of Contents">
         <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
       </button>
@@ -438,6 +491,73 @@
     let pageFlip = null;
     let currentPageIndex = 0;
     let designMode = false;
+
+    // ---- Detect if we're embedded in a small container (iframe/widget) ----
+    function isEmbeddedSmall() {
+      // Check if we're in an iframe
+      const inIframe = window.self !== window.top;
+      // Check if viewport is small (typical embedded widget)
+      const isSmall = window.innerHeight < 500 || window.innerWidth < 500;
+      return inIframe && isSmall;
+    }
+
+    // ---- Tap-to-Read Overlay ----
+    function setupTapOverlay() {
+      const overlay = document.getElementById('tapOverlay');
+
+      // Only show if embedded in a small container
+      if (!isEmbeddedSmall()) {
+        overlay.style.display = 'none';
+        return;
+      }
+
+      overlay.addEventListener('click', () => {
+        // Try fullscreen first
+        const fsEl = document.documentElement;
+        const fsRequest = fsEl.requestFullscreen || fsEl.webkitRequestFullscreen || fsEl.msRequestFullscreen;
+
+        if (fsRequest) {
+          fsRequest.call(fsEl).then(() => {
+            overlay.classList.add('hidden');
+            setTimeout(() => overlay.style.display = 'none', 500);
+          }).catch(() => {
+            // Fullscreen blocked — try opening in a new tab instead
+            window.open(window.location.href, '_blank');
+            overlay.classList.add('hidden');
+            setTimeout(() => overlay.style.display = 'none', 500);
+          });
+        } else {
+          // No fullscreen API — open in new tab
+          window.open(window.location.href, '_blank');
+          overlay.classList.add('hidden');
+          setTimeout(() => overlay.style.display = 'none', 500);
+        }
+      });
+    }
+
+    // Also add a "open in new tab" fallback for mobile where fullscreen may not work in iframes
+    function addNewTabFallback() {
+      if (window.self !== window.top) {
+        // We're in an iframe — add a subtle "open in new tab" button
+        const btn = document.createElement('a');
+        btn.href = window.location.href;
+        btn.target = '_blank';
+        btn.rel = 'noopener';
+        btn.title = 'Open in new tab for full-size reading';
+        btn.style.cssText = `
+          position: fixed; top: 8px; right: 8px; z-index: 200;
+          background: rgba(52,152,219,0.9); color: #fff;
+          width: 36px; height: 36px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          text-decoration: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          transition: all 0.3s ease; font-size: 0;
+        `;
+        btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>';
+        btn.addEventListener('mouseenter', () => { btn.style.transform = 'scale(1.1)'; });
+        btn.addEventListener('mouseleave', () => { btn.style.transform = 'scale(1)'; });
+        document.body.appendChild(btn);
+      }
+    }
 
     // ---- Sizing ----
     function calcBookSize() {
@@ -689,12 +809,33 @@
     document.getElementById('last-btn').addEventListener('click', () => pageFlip && pageFlip.flip(C.totalPages - 1));
 
     // Fullscreen
+    function goFullscreen() {
+      const fsEl = document.documentElement;
+      const fsRequest = fsEl.requestFullscreen || fsEl.webkitRequestFullscreen || fsEl.msRequestFullscreen;
+      if (fsRequest) {
+        fsRequest.call(fsEl).catch(() => {
+          // If fullscreen fails (e.g., in iframe without allow), open in new tab
+          window.open(window.location.href, '_blank');
+        });
+      } else {
+        window.open(window.location.href, '_blank');
+      }
+    }
+
     document.getElementById('fullscreen-btn').addEventListener('click', () => {
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
-      else document.exitFullscreen().catch(() => {});
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        goFullscreen();
+      } else {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document).catch(() => {});
+      }
     });
+
     document.addEventListener('fullscreenchange', () => {
       document.body.classList.toggle('fullscreen-active', !!document.fullscreenElement);
+      setTimeout(() => { initFlipbook(); setTimeout(() => { if (pageFlip && currentPageIndex > 0) pageFlip.flip(currentPageIndex); }, 100); }, 300);
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+      document.body.classList.toggle('fullscreen-active', !!document.webkitFullscreenElement);
       setTimeout(() => { initFlipbook(); setTimeout(() => { if (pageFlip && currentPageIndex > 0) pageFlip.flip(currentPageIndex); }, 100); }, 300);
     });
 
@@ -754,8 +895,6 @@
       const pageNum = page.dataset.pageNum;
       const display = document.getElementById('coordDisplay');
       display.innerHTML = `Page: <strong>${pageNum}</strong> &nbsp;|&nbsp; x: <strong>${x}%</strong> &nbsp;|&nbsp; y: <strong>${y}%</strong><br><span style="opacity:0.6;font-size:12px">Use these values in config.js</span>`;
-
-      // Copy to clipboard
       navigator.clipboard.writeText(`page: ${pageNum}, x: ${x}, y: ${y}`).catch(() => {});
     }
 
@@ -763,9 +902,18 @@
     preloadImages().then(() => {
       initFlipbook();
       buildToc();
+      setupTapOverlay();
+      addNewTabFallback();
       const loading = document.getElementById('loading');
       loading.classList.add('hidden');
       setTimeout(() => loading.remove(), 600);
+
+      // Hint the fullscreen button on mobile
+      if (window.innerWidth < 768) {
+        setTimeout(() => {
+          document.getElementById('fullscreen-btn').classList.add('glow-hint');
+        }, 1500);
+      }
     });
   </script>
 </body>
