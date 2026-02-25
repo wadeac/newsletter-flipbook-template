@@ -14,10 +14,11 @@ Usage:
     --dpi 200          Image quality (default: 200, higher = sharper but larger files)
     --quality 90       JPEG quality (default: 90, range: 1-100)
     --output ./pages   Output directory (default: ./pages)
+    --title "My News"  Set the flipbook title
 
 After running, the script will:
     1. Convert each PDF page to a JPEG image in the /pages/ folder
-    2. Automatically update index.html with the correct page count
+    2. Automatically update config.js with the correct page count and dimensions
     3. Print instructions for deploying to GitHub Pages
 
 Note: You need 'poppler-utils' installed on your system.
@@ -42,6 +43,8 @@ def main():
                         help='JPEG quality 1-100 (default: 90)')
     parser.add_argument('--output', default='./pages',
                         help='Output directory for page images (default: ./pages)')
+    parser.add_argument('--title', default=None,
+                        help='Set the flipbook title (default: PDF filename)')
     args = parser.parse_args()
 
     if not os.path.exists(args.pdf):
@@ -81,41 +84,57 @@ def main():
         w, h = img.size
         print(f"  Saved page {i + 1}/{total_pages}: {filename} ({w}x{h})")
 
-    # Get page dimensions from first image for aspect ratio
+    # Get page dimensions from first image
     first_img = images[0]
     page_w, page_h = first_img.size
 
-    # Update index.html with correct page count and dimensions
-    index_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'index.html')
-    if os.path.exists(index_path):
-        with open(index_path, 'r') as f:
-            html = f.read()
+    # Determine title
+    title = args.title or os.path.splitext(os.path.basename(args.pdf))[0]
 
-        # Update TOTAL_PAGES
-        html = re.sub(
-            r"const TOTAL_PAGES = \d+;",
-            f"const TOTAL_PAGES = {total_pages};",
-            html
+    # Update config.js with correct settings
+    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.js')
+    if os.path.exists(config_path):
+        with open(config_path, 'r') as f:
+            config = f.read()
+
+        # Update totalPages
+        config = re.sub(
+            r'totalPages:\s*\d+',
+            f'totalPages: {total_pages}',
+            config
         )
-        # Update page dimensions
-        html = re.sub(
-            r"const PAGE_ASPECT_W = \d+;",
-            f"const PAGE_ASPECT_W = {page_w};",
-            html
+        # Update pageWidth
+        config = re.sub(
+            r'pageWidth:\s*\d+',
+            f'pageWidth: {page_w}',
+            config
         )
-        html = re.sub(
-            r"const PAGE_ASPECT_H = \d+;",
-            f"const PAGE_ASPECT_H = {page_h};",
-            html
+        # Update pageHeight
+        config = re.sub(
+            r'pageHeight:\s*\d+',
+            f'pageHeight: {page_h}',
+            config
+        )
+        # Update title
+        config = re.sub(
+            r'title:\s*"[^"]*"',
+            f'title: "{title}"',
+            config
         )
 
-        with open(index_path, 'w') as f:
-            f.write(html)
+        with open(config_path, 'w') as f:
+            f.write(config)
 
-        print(f"\nUpdated index.html: {total_pages} pages, {page_w}x{page_h} dimensions")
+        print(f"\nUpdated config.js:")
+        print(f"  Title:  {title}")
+        print(f"  Pages:  {total_pages}")
+        print(f"  Size:   {page_w} x {page_h} pixels")
     else:
-        print(f"\nWarning: index.html not found at {index_path}")
-        print(f"Please manually set TOTAL_PAGES = {total_pages} in your index.html")
+        print(f"\nWarning: config.js not found at {config_path}")
+        print(f"Please manually update config.js with:")
+        print(f"  totalPages: {total_pages}")
+        print(f"  pageWidth: {page_w}")
+        print(f"  pageHeight: {page_h}")
 
     print(f"""
 {'='*60}
@@ -127,18 +146,23 @@ def main():
   Files: {args.output}/page_1.jpg through page_{total_pages}.jpg
 
   NEXT STEPS:
-  1. Test locally:
+
+  1. Add interactive elements (optional):
+       Open config.js and add links, videos, tooltips, etc.
+       Use Ctrl+Shift+D in the flipbook to find coordinates.
+
+  2. Test locally:
        python -m http.server 8080
        Open http://localhost:8080
 
-  2. Deploy to GitHub Pages:
+  3. Deploy to GitHub Pages:
        git add -A
        git commit -m "Add newsletter flipbook"
        git push
 
-  3. Embed in Good Barber (HTML widget):
+  4. Embed in Good Barber (HTML widget):
        <iframe src="YOUR_GITHUB_PAGES_URL"
-               width="100%" height="600"
+               width="100%" height="700"
                frameborder="0" allowfullscreen>
        </iframe>
 

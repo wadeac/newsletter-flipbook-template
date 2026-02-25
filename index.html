@@ -3,231 +3,397 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- ============================================================
-       FLIPBOOK TEMPLATE — CONFIGURE YOUR NEWSLETTER HERE
-       ============================================================
-       1. Replace the <title> below with your newsletter name
-       2. Put your page images (page_1.jpg, page_2.jpg, etc.) in the /pages/ folder
-       3. Update TOTAL_PAGES below to match your page count
-       4. Optionally change the BOOK_TITLE and BACKGROUND_COLOR
-       ============================================================ -->
-  <title>DACC Newsletter</title>
-
+  <title>Flipbook</title>
   <script src="page-flip.browser.js"></script>
+  <script src="config.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+      width: 100%; height: 100%; overflow: hidden;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    /* ---- LAYOUT ---- */
     .flipbook-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      position: relative;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      width: 100%; height: 100%; position: relative;
     }
-
     .book-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      width: 100%;
-      padding: 10px;
+      position: relative; display: flex;
+      align-items: center; justify-content: center;
+      flex: 1; width: 100%; padding: 10px;
     }
-
-    .page {
-      background-color: #fff;
-      overflow: hidden;
-    }
-
+    .page { background: #fff; overflow: hidden; position: relative; }
     .page img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
+      width: 100%; height: 100%;
+      object-fit: contain; display: block;
+      user-select: none; -webkit-user-drag: none;
     }
 
-    /* Navigation arrows */
+    /* ---- NAV ARROWS ---- */
     .nav-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.15);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
+      position: absolute; top: 50%; transform: translateY(-50%);
+      z-index: 100; background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3); color: #fff;
+      width: 44px; height: 44px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.3s ease;
       backdrop-filter: blur(4px);
     }
-
     .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.6);
       transform: translateY(-50%) scale(1.1);
     }
-
-    .nav-btn:active {
-      transform: translateY(-50%) scale(0.95);
-    }
-
-    .nav-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: #fff;
-    }
-
+    .nav-btn svg { width: 20px; height: 20px; fill: #fff; }
     #prev-btn { left: 8px; }
     #next-btn { right: 8px; }
 
-    /* Bottom controls */
+    /* ---- BOTTOM CONTROLS ---- */
     .controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      padding: 8px 16px;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(8px);
-      border-radius: 24px;
-      margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; padding: 8px 16px;
+      background: rgba(0,0,0,0.35); backdrop-filter: blur(8px);
+      border-radius: 24px; margin-bottom: 10px;
     }
-
     .page-info {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 13px;
-      font-weight: 500;
-      min-width: 100px;
-      text-align: center;
-      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.9); font-size: 13px;
+      font-weight: 500; min-width: 100px; text-align: center;
     }
-
     .ctrl-btn {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2); color: #fff;
+      width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.3s ease;
     }
+    .ctrl-btn:hover { background: rgba(255,255,255,0.25); }
+    .ctrl-btn.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+    .ctrl-btn svg { width: 16px; height: 16px; fill: #fff; }
 
-    .ctrl-btn:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .ctrl-btn svg {
-      width: 16px;
-      height: 16px;
-      fill: #fff;
-    }
-
-    /* Fullscreen */
-    .fullscreen-active {
-      background: #1a1a2e;
-    }
-
-    /* Loading overlay */
+    /* ---- LOADING ---- */
     .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 9999;
       transition: opacity 0.5s ease;
     }
-
-    .loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
     .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(255, 255, 255, 0.2);
-      border-top-color: #3498db;
-      border-radius: 50%;
+      width: 48px; height: 48px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top-color: #3498db; border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
+    .loading-text { color: rgba(255,255,255,0.8); margin-top: 16px; font-size: 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .loading-text {
-      color: rgba(255, 255, 255, 0.8);
-      margin-top: 16px;
-      font-size: 14px;
+    /* ---- INTERACTIVE OVERLAYS ---- */
+    .overlay-layer {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 10;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    /* Link hotspots */
+    .hotspot-link {
+      position: absolute; cursor: pointer; pointer-events: auto;
+      border: 2px solid transparent; border-radius: 4px;
+      transition: all 0.25s ease; z-index: 11;
+    }
+    .hotspot-link:hover {
+      border-color: rgba(52,152,219,0.6);
+      background: rgba(52,152,219,0.1);
+      box-shadow: 0 0 12px rgba(52,152,219,0.3);
+    }
+    .hotspot-link .hotspot-tooltip {
+      position: absolute; bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%); background: rgba(0,0,0,0.85);
+      color: #fff; padding: 6px 12px; border-radius: 6px;
+      font-size: 12px; white-space: nowrap;
+      opacity: 0; transition: opacity 0.2s; pointer-events: none;
+    }
+    .hotspot-link .hotspot-tooltip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent; border-top-color: rgba(0,0,0,0.85);
+    }
+    .hotspot-link:hover .hotspot-tooltip { opacity: 1; }
+
+    /* Link indicator icon */
+    .hotspot-link .link-icon {
+      position: absolute; top: 4px; right: 4px;
+      width: 18px; height: 18px; background: rgba(52,152,219,0.8);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; opacity: 0; transition: opacity 0.25s;
+    }
+    .hotspot-link:hover .link-icon { opacity: 1; }
+    .hotspot-link .link-icon svg { width: 10px; height: 10px; fill: #fff; }
+
+    /* Video hotspots */
+    .hotspot-video {
+      position: absolute; cursor: pointer; pointer-events: auto;
+      border-radius: 6px; transition: all 0.25s ease; z-index: 11;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hotspot-video:hover { background: rgba(0,0,0,0.15); }
+    .hotspot-video .play-btn {
+      width: 52px; height: 52px; background: rgba(231,76,60,0.9);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .hotspot-video:hover .play-btn {
+      transform: scale(1.12);
+      background: rgba(231,76,60,1);
+      box-shadow: 0 6px 20px rgba(231,76,60,0.4);
+    }
+    .hotspot-video .play-btn svg { width: 22px; height: 22px; fill: #fff; margin-left: 3px; }
+    .hotspot-video .hotspot-tooltip {
+      position: absolute; bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%); background: rgba(0,0,0,0.85);
+      color: #fff; padding: 6px 12px; border-radius: 6px;
+      font-size: 12px; white-space: nowrap;
+      opacity: 0; transition: opacity 0.2s; pointer-events: none;
+    }
+    .hotspot-video .hotspot-tooltip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent; border-top-color: rgba(0,0,0,0.85);
+    }
+    .hotspot-video:hover .hotspot-tooltip { opacity: 1; }
+
+    /* Zoom hotspots */
+    .hotspot-zoom {
+      position: absolute; cursor: zoom-in; pointer-events: auto;
+      border: 2px solid transparent; border-radius: 4px;
+      transition: all 0.25s ease; z-index: 11;
+    }
+    .hotspot-zoom:hover {
+      border-color: rgba(46,204,113,0.5);
+      background: rgba(46,204,113,0.08);
+    }
+    .hotspot-zoom .zoom-icon {
+      position: absolute; top: 4px; right: 4px;
+      width: 22px; height: 22px; background: rgba(46,204,113,0.85);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; opacity: 0; transition: opacity 0.25s;
+    }
+    .hotspot-zoom:hover .zoom-icon { opacity: 1; }
+    .hotspot-zoom .zoom-icon svg { width: 12px; height: 12px; fill: #fff; }
+
+    /* Tooltip markers */
+    .hotspot-tip {
+      position: absolute; pointer-events: auto; z-index: 12;
+      cursor: pointer;
+    }
+    .hotspot-tip .tip-icon {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      animation: tipPulse 2s ease-in-out infinite;
+      transition: transform 0.2s;
+    }
+    .hotspot-tip:hover .tip-icon { transform: scale(1.15); animation: none; }
+    @keyframes tipPulse {
+      0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+      50% { box-shadow: 0 2px 16px rgba(0,0,0,0.5); }
+    }
+    .hotspot-tip .tip-bubble {
+      position: absolute; bottom: calc(100% + 10px); left: 50%;
+      transform: translateX(-50%); background: rgba(0,0,0,0.9);
+      color: #fff; padding: 10px 14px; border-radius: 8px;
+      font-size: 12px; line-height: 1.5; min-width: 160px; max-width: 260px;
+      opacity: 0; transition: opacity 0.2s; pointer-events: none;
+      text-align: center; white-space: normal;
+    }
+    .hotspot-tip .tip-bubble::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent; border-top-color: rgba(0,0,0,0.9);
+    }
+    .hotspot-tip:hover .tip-bubble,
+    .hotspot-tip.active .tip-bubble { opacity: 1; pointer-events: auto; }
+
+    /* ---- VIDEO MODAL ---- */
+    .video-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.88); z-index: 10000;
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .video-modal.open { display: flex; }
+    .video-modal-inner {
+      position: relative; width: 90%; max-width: 900px;
+      aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .video-modal-inner iframe {
+      width: 100%; height: 100%; border: none;
+    }
+    .video-modal-close {
+      position: absolute; top: -40px; right: 0;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; width: 32px; height: 32px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 18px; transition: all 0.2s;
+    }
+    .video-modal-close:hover { background: rgba(255,255,255,0.3); }
+
+    /* ---- ZOOM MODAL ---- */
+    .zoom-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.92); z-index: 10000;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(4px); cursor: zoom-out;
+    }
+    .zoom-modal.open { display: flex; }
+    .zoom-modal img {
+      max-width: 92%; max-height: 82vh; object-fit: contain;
+      border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+    .zoom-modal .zoom-caption {
+      color: rgba(255,255,255,0.85); font-size: 14px;
+      margin-top: 14px; text-align: center; max-width: 600px;
+    }
+    .zoom-modal-close {
+      position: absolute; top: 16px; right: 20px;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 20px; transition: all 0.2s;
+    }
+    .zoom-modal-close:hover { background: rgba(255,255,255,0.3); }
+
+    /* ---- TABLE OF CONTENTS PANEL ---- */
+    .toc-panel {
+      position: fixed; top: 0; right: -320px; width: 300px;
+      height: 100%; background: rgba(20,25,35,0.97);
+      backdrop-filter: blur(12px); z-index: 9000;
+      transition: right 0.35s ease; overflow-y: auto;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+      padding: 20px 0;
+    }
+    .toc-panel.open { right: 0; }
+    .toc-panel-header {
+      padding: 0 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .toc-panel-header h3 {
+      color: #fff; font-size: 15px; font-weight: 600; letter-spacing: 0.5px;
+    }
+    .toc-close {
+      background: none; border: none; color: rgba(255,255,255,0.6);
+      font-size: 22px; cursor: pointer; transition: color 0.2s;
+    }
+    .toc-close:hover { color: #fff; }
+    .toc-list { padding: 12px 16px; }
+    .toc-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 8px; border-radius: 8px; cursor: pointer;
+      transition: background 0.2s; margin-bottom: 4px;
+    }
+    .toc-item:hover { background: rgba(255,255,255,0.08); }
+    .toc-item.active { background: rgba(52,152,219,0.2); }
+    .toc-thumb {
+      width: 48px; height: 62px; border-radius: 4px;
+      overflow: hidden; flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .toc-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .toc-item-info { flex: 1; min-width: 0; }
+    .toc-item-title {
+      color: #fff; font-size: 13px; font-weight: 500;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .toc-item-page { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 2px; }
+    .toc-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3); z-index: 8999;
+      display: none; cursor: pointer;
+    }
+    .toc-overlay.open { display: block; }
+
+    /* ---- DESIGN MODE (coordinate helper) ---- */
+    .design-mode-banner {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(231,76,60,0.95); color: #fff;
+      text-align: center; padding: 8px; font-size: 13px;
+      z-index: 20000; font-weight: 500;
+    }
+    .design-mode-banner span { opacity: 0.7; font-weight: 400; }
+    .coord-display {
+      position: fixed; bottom: 20px; left: 50%;
+      transform: translateX(-50%); background: rgba(0,0,0,0.9);
+      color: #0f0; padding: 12px 20px; border-radius: 8px;
+      font-family: monospace; font-size: 14px; z-index: 20000;
+      display: none; min-width: 300px; text-align: center;
     }
 
-    /* Responsive */
+    /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
-      .nav-btn {
-        width: 36px;
-        height: 36px;
-      }
-      .nav-btn svg {
-        width: 16px;
-        height: 16px;
-      }
+      .nav-btn { width: 36px; height: 36px; }
+      .nav-btn svg { width: 16px; height: 16px; }
       #prev-btn { left: 4px; }
       #next-btn { right: 4px; }
-      .controls {
-        gap: 10px;
-        padding: 6px 12px;
-      }
-      .page-info {
-        font-size: 11px;
-      }
+      .controls { gap: 8px; padding: 6px 10px; }
+      .page-info { font-size: 11px; min-width: 80px; }
+      .ctrl-btn { width: 32px; height: 32px; }
+      .toc-panel { width: 260px; right: -280px; }
+      .hotspot-video .play-btn { width: 40px; height: 40px; }
+      .hotspot-video .play-btn svg { width: 16px; height: 16px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Loading overlay -->
+  <!-- Loading -->
   <div class="loading-overlay" id="loading">
     <div class="spinner"></div>
     <div class="loading-text">Loading newsletter...</div>
   </div>
 
+  <!-- Video Modal -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-modal-inner">
+      <button class="video-modal-close" id="videoClose">&times;</button>
+      <iframe id="videoFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- Zoom Modal -->
+  <div class="zoom-modal" id="zoomModal">
+    <button class="zoom-modal-close" id="zoomClose">&times;</button>
+    <img id="zoomImage" src="" alt="Zoomed view">
+    <div class="zoom-caption" id="zoomCaption"></div>
+  </div>
+
+  <!-- TOC Overlay -->
+  <div class="toc-overlay" id="tocOverlay"></div>
+
+  <!-- TOC Panel -->
+  <div class="toc-panel" id="tocPanel">
+    <div class="toc-panel-header">
+      <h3>Contents</h3>
+      <button class="toc-close" id="tocClose">&times;</button>
+    </div>
+    <div class="toc-list" id="tocList"></div>
+  </div>
+
+  <!-- Design Mode coordinate display -->
+  <div class="coord-display" id="coordDisplay"></div>
+
+  <!-- Main Layout -->
   <div class="flipbook-container">
     <div class="book-wrapper">
       <button class="nav-btn" id="prev-btn" title="Previous page">
         <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
       </button>
-
       <div id="flipbook"></div>
-
       <button class="nav-btn" id="next-btn" title="Next page">
         <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </button>
@@ -247,188 +413,356 @@
       <button class="ctrl-btn" id="last-btn" title="Last page">
         <svg viewBox="0 0 24 24"><path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"/></svg>
       </button>
+      <!-- TOC button -->
+      <button class="ctrl-btn" id="toc-btn" title="Table of Contents">
+        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
       <button class="ctrl-btn" id="fullscreen-btn" title="Toggle fullscreen">
-        <svg viewBox="0 0 24 24" id="fs-icon"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
       </button>
     </div>
   </div>
 
   <script>
     // ============================================================
-    //  CONFIGURATION — EDIT THESE VALUES FOR YOUR NEWSLETTER
+    //  ENGINE — reads config.js and powers everything
     // ============================================================
+    const C = FLIPBOOK_CONFIG;
 
-    const TOTAL_PAGES = 1;                // Number of page images in /pages/ folder
-    const BACKGROUND_COLOR = '#2c3e50';    // Background color of the flipbook viewer
-    const PAGE_ASPECT_W = 1700;            // Width of your page images (in pixels)
-    const PAGE_ASPECT_H = 2200;            // Height of your page images (in pixels)
-    const FLIP_TIME = 800;                 // Page flip animation duration (ms)
+    // Apply settings
+    document.title = C.title || 'Flipbook';
+    document.body.style.background = C.backgroundColor || '#2c3e50';
+    document.getElementById('loading').style.background = C.backgroundColor || '#2c3e50';
 
-    // ============================================================
-    //  DO NOT EDIT BELOW THIS LINE (unless you know what you're doing)
-    // ============================================================
+    const ASPECT = C.pageWidth / C.pageHeight;
+    let pageFlip = null;
+    let currentPageIndex = 0;
+    let designMode = false;
 
-    // Apply background color
-    document.body.style.background = BACKGROUND_COLOR;
-    document.getElementById('loading').style.background = BACKGROUND_COLOR;
-
-    const ASPECT_RATIO = PAGE_ASPECT_W / PAGE_ASPECT_H;
-
+    // ---- Sizing ----
     function calcBookSize() {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight - 70;
-      let bookWidth, bookHeight;
-
+      const vw = window.innerWidth, vh = window.innerHeight - 70;
+      let bw, bh;
       if (vw >= 700) {
-        const maxW = vw * 0.85;
-        const maxH = vh * 0.92;
-        bookHeight = maxH;
-        bookWidth = bookHeight * ASPECT_RATIO * 2;
-        if (bookWidth > maxW) {
-          bookWidth = maxW;
-          bookHeight = bookWidth / (ASPECT_RATIO * 2);
-        }
-        return {
-          width: Math.floor(bookWidth),
-          height: Math.floor(bookHeight),
-          pageWidth: Math.floor(bookWidth / 2),
-          pageHeight: Math.floor(bookHeight),
-          mode: 'double'
-        };
+        const maxW = vw * 0.85, maxH = vh * 0.92;
+        bh = maxH; bw = bh * ASPECT * 2;
+        if (bw > maxW) { bw = maxW; bh = bw / (ASPECT * 2); }
+        return { pageWidth: Math.floor(bw/2), pageHeight: Math.floor(bh), mode: 'double' };
       } else {
-        const maxW = vw * 0.92;
-        const maxH = vh * 0.9;
-        bookHeight = maxH;
-        bookWidth = bookHeight * ASPECT_RATIO;
-        if (bookWidth > maxW) {
-          bookWidth = maxW;
-          bookHeight = bookWidth / ASPECT_RATIO;
-        }
-        return {
-          width: Math.floor(bookWidth),
-          height: Math.floor(bookHeight),
-          pageWidth: Math.floor(bookWidth),
-          pageHeight: Math.floor(bookHeight),
-          mode: 'single'
-        };
+        const maxW = vw * 0.92, maxH = vh * 0.9;
+        bh = maxH; bw = bh * ASPECT;
+        if (bw > maxW) { bw = maxW; bh = bw / ASPECT; }
+        return { pageWidth: Math.floor(bw), pageHeight: Math.floor(bh), mode: 'single' };
       }
     }
 
-    let pageFlip = null;
-
+    // ---- Preload ----
     function preloadImages() {
       return Promise.all(
-        Array.from({ length: TOTAL_PAGES }, (_, i) => {
-          return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = resolve;
-            img.onerror = resolve;
-            img.src = `pages/page_${i + 1}.jpg`;
-          });
-        })
+        Array.from({ length: C.totalPages }, (_, i) =>
+          new Promise(r => { const img = new Image(); img.onload = img.onerror = r; img.src = `pages/page_${i+1}.jpg`; })
+        )
       );
     }
 
+    // ---- Create overlay elements for a page ----
+    function createOverlays(pageDiv, pageNum) {
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay-layer';
+
+      // Links
+      (C.links || []).filter(l => l.page === pageNum).forEach(l => {
+        const el = document.createElement('a');
+        el.className = 'hotspot-link';
+        el.href = l.url; el.target = '_blank'; el.rel = 'noopener';
+        el.style.cssText = `left:${l.x}%;top:${l.y}%;width:${l.width}%;height:${l.height}%`;
+        if (l.label) {
+          const tip = document.createElement('span');
+          tip.className = 'hotspot-tooltip'; tip.textContent = l.label;
+          el.appendChild(tip);
+        }
+        const icon = document.createElement('span');
+        icon.className = 'link-icon';
+        icon.innerHTML = '<svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>';
+        el.appendChild(icon);
+        el.addEventListener('click', (e) => e.stopPropagation());
+        overlay.appendChild(el);
+      });
+
+      // Videos
+      (C.videos || []).filter(v => v.page === pageNum).forEach(v => {
+        const el = document.createElement('div');
+        el.className = 'hotspot-video';
+        el.style.cssText = `left:${v.x}%;top:${v.y}%;width:${v.width}%;height:${v.height}%`;
+        const btn = document.createElement('div');
+        btn.className = 'play-btn';
+        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        el.appendChild(btn);
+        if (v.label) {
+          const tip = document.createElement('span');
+          tip.className = 'hotspot-tooltip'; tip.textContent = v.label;
+          el.appendChild(tip);
+        }
+        el.addEventListener('click', (e) => { e.stopPropagation(); openVideo(v.videoUrl); });
+        overlay.appendChild(el);
+      });
+
+      // Zoom areas
+      (C.zoomAreas || []).filter(z => z.page === pageNum).forEach(z => {
+        const el = document.createElement('div');
+        el.className = 'hotspot-zoom';
+        el.style.cssText = `left:${z.x}%;top:${z.y}%;width:${z.width}%;height:${z.height}%`;
+        const icon = document.createElement('span');
+        icon.className = 'zoom-icon';
+        icon.innerHTML = '<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z"/></svg>';
+        el.appendChild(icon);
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openZoom(z.imageUrl || `pages/page_${pageNum}.jpg`, z.caption || '', !z.imageUrl);
+        });
+        overlay.appendChild(el);
+      });
+
+      // Tooltips
+      (C.tooltips || []).filter(t => t.page === pageNum).forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'hotspot-tip';
+        el.style.cssText = `left:${t.x}%;top:${t.y}%`;
+        const icon = document.createElement('div');
+        icon.className = 'tip-icon';
+        icon.style.background = t.color || '#3498db';
+        icon.textContent = 'i';
+        el.appendChild(icon);
+        const bubble = document.createElement('div');
+        bubble.className = 'tip-bubble'; bubble.textContent = t.text;
+        el.appendChild(bubble);
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          el.classList.toggle('active');
+        });
+        overlay.appendChild(el);
+      });
+
+      pageDiv.appendChild(overlay);
+    }
+
+    // ---- Init flipbook ----
     function initFlipbook() {
       const container = document.getElementById('flipbook');
       container.innerHTML = '';
       const size = calcBookSize();
 
       pageFlip = new St.PageFlip(container, {
-        width: size.pageWidth,
-        height: size.pageHeight,
-        size: 'fixed',
-        minWidth: 200,
-        maxWidth: 1200,
-        minHeight: 260,
-        maxHeight: 1600,
-        showCover: true,
-        maxShadowOpacity: 0.5,
-        mobileScrollSupport: true,
-        clickEventForward: true,
-        useMouseEvents: true,
-        swipeDistance: 30,
-        showPageCorners: true,
-        disableFlipByClick: false,
-        flippingTime: FLIP_TIME,
+        width: size.pageWidth, height: size.pageHeight,
+        size: 'fixed', minWidth: 200, maxWidth: 1200,
+        minHeight: 260, maxHeight: 1600,
+        showCover: true, maxShadowOpacity: 0.5,
+        mobileScrollSupport: true, clickEventForward: true,
+        useMouseEvents: true, swipeDistance: 30,
+        showPageCorners: true, disableFlipByClick: false,
+        flippingTime: C.flipTime || 800,
         usePortrait: size.mode === 'single',
-        autoSize: false,
-        drawShadow: true,
-        startPage: 0,
-        startZIndex: 0,
+        autoSize: false, drawShadow: true, startPage: 0, startZIndex: 0,
       });
 
       const pages = [];
-      for (let i = 1; i <= TOTAL_PAGES; i++) {
+      for (let i = 1; i <= C.totalPages; i++) {
         const pageDiv = document.createElement('div');
         pageDiv.className = 'page';
+        pageDiv.dataset.pageNum = i;
         const img = document.createElement('img');
         img.src = `pages/page_${i}.jpg`;
         img.alt = `Page ${i}`;
         img.draggable = false;
         pageDiv.appendChild(img);
+        createOverlays(pageDiv, i);
         pages.push(pageDiv);
       }
 
       pageFlip.loadFromHTML(pages);
-      pageFlip.on('flip', (e) => updatePageInfo(e.data));
-      updatePageInfo(0);
+      pageFlip.on('flip', (e) => { currentPageIndex = e.data; updatePageInfo(e.data); updateTocActive(); });
+      updatePageInfo(currentPageIndex);
     }
 
-    function updatePageInfo(pageIndex) {
-      document.getElementById('page-info').textContent =
-        `Page ${pageIndex + 1} of ${TOTAL_PAGES}`;
+    function updatePageInfo(idx) {
+      currentPageIndex = idx;
+      document.getElementById('page-info').textContent = `Page ${idx + 1} of ${C.totalPages}`;
     }
 
-    // Navigation
+    // ---- Video modal ----
+    function parseVideoUrl(url) {
+      let m;
+      if ((m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/))) {
+        return `https://www.youtube.com/embed/${m[1]}?autoplay=1&rel=0`;
+      }
+      if ((m = url.match(/vimeo\.com\/(\d+)/))) {
+        return `https://player.vimeo.com/video/${m[1]}?autoplay=1`;
+      }
+      return url;
+    }
+    function openVideo(url) {
+      const modal = document.getElementById('videoModal');
+      modal.style.display = 'flex';
+      document.getElementById('videoFrame').src = parseVideoUrl(url);
+      modal.classList.add('open');
+    }
+    function closeVideo() {
+      document.getElementById('videoFrame').src = 'about:blank';
+      document.getElementById('videoModal').classList.remove('open');
+      document.getElementById('videoModal').style.display = 'none';
+    }
+    document.getElementById('videoClose').addEventListener('click', (e) => { e.stopPropagation(); closeVideo(); });
+    document.getElementById('videoModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('videoModal')) closeVideo();
+    });
+
+    // ---- Zoom modal ----
+    function openZoom(src, caption, isPageImage) {
+      document.getElementById('zoomImage').src = src;
+      document.getElementById('zoomCaption').textContent = caption;
+      document.getElementById('zoomCaption').style.display = caption ? 'block' : 'none';
+      document.getElementById('zoomModal').classList.add('open');
+    }
+    function closeZoom() {
+      document.getElementById('zoomModal').classList.remove('open');
+      document.getElementById('zoomImage').src = '';
+    }
+    document.getElementById('zoomClose').addEventListener('click', closeZoom);
+    document.getElementById('zoomModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeZoom();
+    });
+
+    // ---- Table of Contents ----
+    function buildToc() {
+      const list = document.getElementById('tocList');
+      list.innerHTML = '';
+      const entries = (C.tableOfContents && C.tableOfContents.length)
+        ? C.tableOfContents
+        : Array.from({ length: C.totalPages }, (_, i) => ({ page: i + 1, title: `Page ${i + 1}` }));
+
+      entries.forEach(entry => {
+        const item = document.createElement('div');
+        item.className = 'toc-item';
+        item.dataset.page = entry.page;
+        item.innerHTML = `
+          <div class="toc-thumb"><img src="pages/page_${entry.page}.jpg" alt="Page ${entry.page}"></div>
+          <div class="toc-item-info">
+            <div class="toc-item-title">${entry.title}</div>
+            <div class="toc-item-page">Page ${entry.page}</div>
+          </div>`;
+        item.addEventListener('click', () => {
+          if (pageFlip) pageFlip.flip(entry.page - 1);
+          closeToc();
+        });
+        list.appendChild(item);
+      });
+      updateTocActive();
+    }
+    function updateTocActive() {
+      document.querySelectorAll('.toc-item').forEach(item => {
+        item.classList.toggle('active', parseInt(item.dataset.page) === currentPageIndex + 1);
+      });
+    }
+    function openToc() {
+      document.getElementById('tocPanel').classList.add('open');
+      document.getElementById('tocOverlay').classList.add('open');
+      document.getElementById('toc-btn').classList.add('active');
+      updateTocActive();
+    }
+    function closeToc() {
+      document.getElementById('tocPanel').classList.remove('open');
+      document.getElementById('tocOverlay').classList.remove('open');
+      document.getElementById('toc-btn').classList.remove('active');
+    }
+    document.getElementById('toc-btn').addEventListener('click', () => {
+      document.getElementById('tocPanel').classList.contains('open') ? closeToc() : openToc();
+    });
+    document.getElementById('tocClose').addEventListener('click', closeToc);
+    document.getElementById('tocOverlay').addEventListener('click', closeToc);
+
+    // ---- Navigation ----
     document.getElementById('prev-btn').addEventListener('click', () => pageFlip && pageFlip.flipPrev());
     document.getElementById('next-btn').addEventListener('click', () => pageFlip && pageFlip.flipNext());
     document.getElementById('prev-ctrl').addEventListener('click', () => pageFlip && pageFlip.flipPrev());
     document.getElementById('next-ctrl').addEventListener('click', () => pageFlip && pageFlip.flipNext());
     document.getElementById('first-btn').addEventListener('click', () => pageFlip && pageFlip.flip(0));
-    document.getElementById('last-btn').addEventListener('click', () => pageFlip && pageFlip.flip(TOTAL_PAGES - 1));
+    document.getElementById('last-btn').addEventListener('click', () => pageFlip && pageFlip.flip(C.totalPages - 1));
 
     // Fullscreen
     document.getElementById('fullscreen-btn').addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen().catch(() => {});
-      }
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+      else document.exitFullscreen().catch(() => {});
     });
-
     document.addEventListener('fullscreenchange', () => {
       document.body.classList.toggle('fullscreen-active', !!document.fullscreenElement);
-      setTimeout(() => {
-        const currentPage = pageFlip ? pageFlip.getCurrentPageIndex() : 0;
-        initFlipbook();
-        setTimeout(() => { if (pageFlip && currentPage > 0) pageFlip.flip(currentPage); }, 100);
-      }, 300);
+      setTimeout(() => { initFlipbook(); setTimeout(() => { if (pageFlip && currentPageIndex > 0) pageFlip.flip(currentPageIndex); }, 100); }, 300);
     });
 
-    // Keyboard navigation
+    // Keyboard
     document.addEventListener('keydown', (e) => {
       if (!pageFlip) return;
+      if (e.key === 'Escape') { closeVideo(); closeZoom(); closeToc(); return; }
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') pageFlip.flipNext();
       else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') pageFlip.flipPrev();
       else if (e.key === 'Home') pageFlip.flip(0);
-      else if (e.key === 'End') pageFlip.flip(TOTAL_PAGES - 1);
+      else if (e.key === 'End') pageFlip.flip(C.totalPages - 1);
     });
 
-    // Resize handler
+    // Resize
     let resizeTimeout;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        const currentPage = pageFlip ? pageFlip.getCurrentPageIndex() : 0;
         initFlipbook();
-        setTimeout(() => { if (pageFlip && currentPage > 0) pageFlip.flip(currentPage); }, 100);
+        setTimeout(() => { if (pageFlip && currentPageIndex > 0) pageFlip.flip(currentPageIndex); }, 100);
       }, 250);
     });
 
-    // Init
+    // ---- DESIGN MODE (Ctrl+Shift+D) ----
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        designMode = !designMode;
+        if (designMode) {
+          const banner = document.createElement('div');
+          banner.className = 'design-mode-banner';
+          banner.id = 'designBanner';
+          banner.innerHTML = 'DESIGN MODE — Click on a page to get coordinates <span>(Press Ctrl+Shift+D to exit)</span>';
+          document.body.appendChild(banner);
+          document.getElementById('coordDisplay').style.display = 'block';
+          document.querySelectorAll('.page').forEach(p => {
+            p.addEventListener('click', designClick);
+            p.style.cursor = 'crosshair';
+          });
+        } else {
+          const banner = document.getElementById('designBanner');
+          if (banner) banner.remove();
+          document.getElementById('coordDisplay').style.display = 'none';
+          document.querySelectorAll('.page').forEach(p => {
+            p.removeEventListener('click', designClick);
+            p.style.cursor = '';
+          });
+        }
+      }
+    });
+
+    function designClick(e) {
+      const page = e.currentTarget;
+      const rect = page.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+      const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+      const pageNum = page.dataset.pageNum;
+      const display = document.getElementById('coordDisplay');
+      display.innerHTML = `Page: <strong>${pageNum}</strong> &nbsp;|&nbsp; x: <strong>${x}%</strong> &nbsp;|&nbsp; y: <strong>${y}%</strong><br><span style="opacity:0.6;font-size:12px">Use these values in config.js</span>`;
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(`page: ${pageNum}, x: ${x}, y: ${y}`).catch(() => {});
+    }
+
+    // ---- INIT ----
     preloadImages().then(() => {
       initFlipbook();
+      buildToc();
       const loading = document.getElementById('loading');
       loading.classList.add('hidden');
       setTimeout(() => loading.remove(), 600);
